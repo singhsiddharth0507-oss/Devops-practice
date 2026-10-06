@@ -15,13 +15,13 @@ jobs:
       - name: Decode SSH key
         run: echo "${{ secrets.EC2_SSH_KEY_B64 }}" | base64 -d > ec2key.pem
       - name: check key file
-        run: wc -l ec2key.pem && head -c 30 ec2key.pem
+        run: wc -l ec2key.pem && tail -c 30 ec2key.pem
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key_path: ec2key.pem
+          key_path: ${{ github.workspace }}/ec2key.pem
           script: |
             cd Devops-practice
             git pull
