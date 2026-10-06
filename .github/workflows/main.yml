@@ -1,11 +1,25 @@
 name: My First Pipeline
-on: push 
+on: push
 jobs:
   build-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Build docker image
+      - name: Build Docker image
         run: docker build -t my-first-image .
- 
+  deploy:
+    needs: build-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd Devops-practice
+            git pull
+            sudo docker build -t my-first-image .
+            sudo docker run my-first-image
