@@ -1,4 +1,4 @@
-name: My First Pipeline
+  name: My First Pipeline
 on: push
 jobs:
   build-image:
@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Decode SSH key
         run: echo "${{ secrets.EC2_SSH_KEY_B64 }}" | base64 -d > ec2key.pem
+      - name: check key file
+        run: wc -l ec2key.pem && head -c 30 ec2key.pem
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1
         with:
