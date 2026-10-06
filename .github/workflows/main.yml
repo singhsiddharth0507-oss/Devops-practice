@@ -1,4 +1,4 @@
-  name: My First Pipeline
+name: My First Pipeline
 on: push
 jobs:
   build-image:
